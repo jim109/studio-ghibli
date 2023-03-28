@@ -1,0 +1,103 @@
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import  ButtonLogin from "../components/UI/moleculas/ButtonLogin/ButtonLogin";
+import {InputBase} from '../components/UI/moleculas/InputBase'
+
+
+
+const Login = () => {
+  const router = useRouter()
+  const [isRegister, setIsRegister] = useState(false);
+
+  const register = () => {
+    setIsRegister(true);
+  };
+
+  const login = () => {
+    setIsRegister(false);
+  };
+
+  return (
+    <main className="login">
+      <div className="login-logo">
+        <img src="./icons/logo.png" alt="logo login" />
+      </div>
+
+      
+
+      {isRegister ? (
+        <>
+          <div className="login-title">
+            <h1>Register</h1>
+          </div>
+          <div className="login-register">
+            <div className="login-sesion-input">
+              <InputBase img="./icons/PersonUser.png" tipo="text" label="UserName" />
+              <InputBase img="./icons/Email.png"tipo="text" label="Email" />
+              <InputBase img="./icons/PasswordIcon.png" tipo="password" label="Password" />
+            </div>
+            <div className="login-sesion-create">
+              <button onClick={login}>Return</button>
+              <button>Create</button>
+            </div>
+            <div className="login-sesion-terminos">
+              <h3>By creating an account or signing you agree to our</h3>
+              <h4>Terms and Conditions.</h4>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          
+         
+          <div className="login-sesion">
+            <div className="login-sesion-input">
+              <InputBase img="./icons/UserIcon.png" tipo="text" label="User" />
+              <InputBase img="./icons/PasswordIcon.png" tipo="password" label="Password" />
+            </div>
+            <div className="login-sesion-button">
+              <button onClick={register}>Register</button>
+              <button onClick={()=> router.push("/starter")} >Log-in</button>
+            </div>          
+              <div className='buttonLogin'>
+                    <ButtonLogin  
+                      className = "facebook"
+                      type = "button"
+                      text = "Connect with Facebook"                 
+                   />
+              </div>
+              <div className='buttonLogin'>
+                    <ButtonLogin  
+                      className = "twitter"
+                      type = "button"
+                      text = "Connect with Twitter"
+                    />
+              </div>
+            </div>
+        </>
+      )}
+    </main>
+  );
+};
+
+export function getServerSideProps(context) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      session,
+    },
+  }
+
+}
+
+export default Login;
